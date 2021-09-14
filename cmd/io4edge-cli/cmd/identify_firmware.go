@@ -38,7 +38,7 @@ func identifyFirmware(cmd *cobra.Command, args []string) {
 	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
 
-	fmt.Printf("Firmware name: %s, Version %d.%d.%d\n", fwID.Name, fwID.MajorVersion, fwID.MinorVersion, fwID.PatchVersion)
+	fmt.Printf("Firmware name: %s, Version %s\n", fwID.Name, fwID.Version)
 }
 
 func init() {

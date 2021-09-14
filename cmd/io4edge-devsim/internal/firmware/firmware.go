@@ -23,22 +23,18 @@ import (
 )
 
 type firmwareID struct {
-	Name  string
-	Major uint
-	Minor uint
-	Patch uint
+	Name    string
+	Version string
 }
 
 type firmwareHeader struct {
 	Name          string
-	Major         uint
-	Minor         uint
-	Patch         uint
+	Version       string
 	FirmwareWorks bool `json:"firmware_works"`
 }
 
 var (
-	fwID            = firmwareID{"default", 1, 0, 0}
+	fwID            = firmwareID{"default", "1.0.0.alpha"}
 	nextChunkNumber = uint32(0)
 	nextFlashOffset = uint32(0)
 	flash           = make([]byte, 200000)
@@ -52,10 +48,8 @@ func IdentifyFirmware() *api.CoreResponse {
 		Status: api.Status_OK,
 		Data: &api.CoreResponse_IdentifyFirmware{
 			IdentifyFirmware: &api.IdentifyFirmwareResponse{
-				Name:         fwID.Name,
-				MajorVersion: uint32(fwID.Major),
-				MinorVersion: uint32(fwID.Minor),
-				PatchVersion: uint32(fwID.Patch),
+				Name:    fwID.Name,
+				Version: fwID.Version,
 			},
 		},
 	}
@@ -89,9 +83,7 @@ func LoadFirmwareChunk(c *api.LoadFirmwareChunkCommand) (res *api.CoreResponse, 
 			} else {
 				log.Printf("activating new firmware %v\n", header)
 				fwID.Name = header.Name
-				fwID.Major = header.Major
-				fwID.Minor = header.Minor
-				fwID.Patch = header.Patch
+				fwID.Version = header.Version
 				doreset = true
 			}
 		}
