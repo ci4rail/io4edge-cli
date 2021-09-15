@@ -17,6 +17,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
@@ -27,7 +28,7 @@ import (
 )
 
 var (
-	chunkSize = uint(1024)
+	chunkSize uint
 )
 
 var loadFirmwareCmd = &cobra.Command{
@@ -77,10 +78,12 @@ func loadRawFirmware(cmd *cobra.Command, args []string) {
 
 func readbackFirmwareID(c *core.Client, restartingNow bool) {
 	if restartingNow {
+		fmt.Println("Reconnect to restarted device")
 		var err error
 		c, err = client.NewCliClient(device)
 		e.ErrChk(err)
 	}
+	fmt.Println("Reading back firmware id")
 	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
 	printFirmwareID(fwID)
@@ -89,4 +92,6 @@ func readbackFirmwareID(c *core.Client, restartingNow bool) {
 func init() {
 	rootCmd.AddCommand(loadFirmwareCmd)
 	rootCmd.AddCommand(loadRawFirmwareCmd)
+	loadFirmwareCmd.PersistentFlags().UintVarP(&chunkSize, "chunksize", "c", 1024, "Size of chunk in bytes for loading")
+	loadRawFirmwareCmd.PersistentFlags().UintVarP(&chunkSize, "chunksize", "c", 1024, "Size of chunk in bytes for loading")
 }
