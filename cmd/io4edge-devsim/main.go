@@ -20,6 +20,7 @@ import (
 
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-devsim/internal/firmware"
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-devsim/internal/hardware"
+	"github.com/ci4rail/io4edge-cli/cmd/io4edge-devsim/internal/restart"
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-devsim/pkg/version"
 	"github.com/ci4rail/io4edge-client-go/client"
 	api "github.com/ci4rail/io4edge-client-go/core/v1alpha1"
@@ -71,7 +72,7 @@ func serveConnection(ch *client.Channel) {
 		}
 
 		var res *api.CoreResponse
-		doreset := false
+		dorestart := false
 		switch c.Id {
 		case api.CommandId_IDENTIFY_FIRMWARE:
 			res = firmware.IdentifyFirmware()
@@ -80,7 +81,9 @@ func serveConnection(ch *client.Channel) {
 		case api.CommandId_PROGRAM_HARDWARE_IDENTIFICATION:
 			res = hardware.ProgramHardwareIdentification(c.GetProgramHardwareIdentification())
 		case api.CommandId_LOAD_FIRMWARE_CHUNK:
-			res, doreset = firmware.LoadFirmwareChunk(c.GetLoadFirmwareChunk())
+			res, dorestart = firmware.LoadFirmwareChunk(c.GetLoadFirmwareChunk())
+		case api.CommandId_RESTART:
+			res, dorestart = restart.Restart()
 		default:
 			res = &api.CoreResponse{
 				Id:     c.Id,
@@ -93,7 +96,7 @@ func serveConnection(ch *client.Channel) {
 			log.Printf("Failed to write: %s", err)
 			return
 		}
-		if doreset {
+		if dorestart {
 			return
 		}
 	}

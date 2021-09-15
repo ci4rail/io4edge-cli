@@ -17,11 +17,11 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
 	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	"github.com/ci4rail/io4edge-client-go/core"
 
 	"github.com/spf13/cobra"
 )
@@ -46,11 +46,10 @@ func loadFirmware(cmd *cobra.Command, args []string) {
 	c, err := client.NewCliClient(device)
 	e.ErrChk(err)
 
-	err = c.LoadFirmware(file, chunkSize, time.Duration(timeoutSecs)*time.Second)
+	restartingNow, err := c.LoadFirmware(file, chunkSize, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
-	fmt.Println("Success. Read back programmed firmware info.")
-	identifyFirmware(cmd, args)
+	readbackFirmwareID(c, restartingNow)
 }
 
 var loadRawFirmwareCmd = &cobra.Command{
@@ -70,11 +69,21 @@ func loadRawFirmware(cmd *cobra.Command, args []string) {
 	c, err := client.NewCliClient(device)
 	e.ErrChk(err)
 
-	err = c.LoadFirmwareBinaryFromFile(file, chunkSize, time.Duration(timeoutSecs)*time.Second)
+	restartingNow, err := c.LoadFirmwareBinaryFromFile(file, chunkSize, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
-	fmt.Println("Success. Read back programmed firmware info.")
-	identifyFirmware(cmd, args)
+	readbackFirmwareID(c, restartingNow)
+}
+
+func readbackFirmwareID(c *core.Client, restartingNow bool) {
+	if restartingNow {
+		var err error
+		c, err = client.NewCliClient(device)
+		e.ErrChk(err)
+	}
+	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
+	e.ErrChk(err)
+	printFirmwareID(fwID)
 }
 
 func init() {

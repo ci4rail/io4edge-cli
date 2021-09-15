@@ -44,8 +44,9 @@ var (
 func IdentifyFirmware() *api.CoreResponse {
 
 	res := &api.CoreResponse{
-		Id:     api.CommandId_IDENTIFY_FIRMWARE,
-		Status: api.Status_OK,
+		Id:            api.CommandId_IDENTIFY_FIRMWARE,
+		Status:        api.Status_OK,
+		RestartingNow: false,
 		Data: &api.CoreResponse_IdentifyFirmware{
 			IdentifyFirmware: &api.IdentifyFirmwareResponse{
 				Name:    fwID.Name,
@@ -62,7 +63,7 @@ func LoadFirmwareChunk(c *api.LoadFirmwareChunkCommand) (res *api.CoreResponse, 
 	var status = api.Status_OK
 	doreset = false
 	if nextChunkNumber != c.ChunkNumber {
-		status = api.Status_CHUNK_SEQ_ERROR
+		status = api.Status_BAD_CHUNK_SEQ
 	} else {
 		log.Printf("Loading chunk %d @%08x\n", nextChunkNumber, nextFlashOffset)
 
@@ -90,8 +91,9 @@ func LoadFirmwareChunk(c *api.LoadFirmwareChunkCommand) (res *api.CoreResponse, 
 	}
 
 	res = &api.CoreResponse{
-		Id:     api.CommandId_LOAD_FIRMWARE_CHUNK,
-		Status: status,
+		Id:            api.CommandId_LOAD_FIRMWARE_CHUNK,
+		RestartingNow: doreset,
+		Status:        status,
 	}
 	return res, doreset
 }

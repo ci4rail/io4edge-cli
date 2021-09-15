@@ -31,15 +31,16 @@ type hardwareID struct {
 }
 
 var (
-	hwID = hardwareID{"S101-CPU01:UC", serialNumber{0x1234567887654321, 0x4567456745674567}, 1}
+	hwID = hardwareID{"S101-CPU01UC", serialNumber{0x1234567887654321, 0x4567456745674567}, 1}
 )
 
 // IdentifyHardware reports the current hardware inventory data
 func IdentifyHardware() *api.CoreResponse {
 
 	res := &api.CoreResponse{
-		Id:     api.CommandId_IDENTIFY_HARDWARE,
-		Status: api.Status_OK,
+		Id:            api.CommandId_IDENTIFY_HARDWARE,
+		Status:        api.Status_OK,
+		RestartingNow: false,
 		Data: &api.CoreResponse_IdentifyHardware{
 			IdentifyHardware: &api.IdentifyHardwareResponse{
 				RootArticle: hwID.RootArticle,
@@ -64,8 +65,9 @@ func ProgramHardwareIdentification(c *api.ProgramHardwareIdentificationCommand) 
 	hwID.MajorVersion = c.MajorVersion
 
 	res := &api.CoreResponse{
-		Id:     api.CommandId_IDENTIFY_HARDWARE,
-		Status: api.Status_OK,
+		Id:            api.CommandId_IDENTIFY_HARDWARE,
+		Status:        api.Status_OK,
+		RestartingNow: false,
 	}
 	return res
 }
