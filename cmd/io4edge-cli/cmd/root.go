@@ -23,7 +23,8 @@ import (
 )
 
 var (
-	device      = "localhost:9999"
+	device      = "InstanceName"
+	service     = "serviceName"
 	timeoutSecs = 3
 )
 
@@ -44,6 +45,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&device, "device", "d", "", "IP address of io4edge devices with port e.g. 192.168.7.1:9999")
+	rootCmd.PersistentFlags().StringVarP(&device, "device", "d", "", "Instance name of device")
+	rootCmd.PersistentFlags().StringVarP(&service, "service", "s", "", "Service name of the core function")
 	rootCmd.PersistentFlags().IntVarP(&timeoutSecs, "timeout", "t", 3, "Timeout in seconds to wait for device responses")
 }

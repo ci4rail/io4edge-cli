@@ -63,7 +63,7 @@ func programHardwareIdentification(cmd *cobra.Command, args []string) {
 		},
 	}
 
-	c, err := client.NewCliClient(device)
+	c, err := client.NewCliClient(device, service)
 	e.ErrChk(err)
 
 	err = c.ProgramHardwareIdentification(id, time.Duration(timeoutSecs)*time.Second)
