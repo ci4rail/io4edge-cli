@@ -44,7 +44,7 @@ io4edge-cli load-firmware <firmware-package-file>`,
 
 func loadFirmware(cmd *cobra.Command, args []string) {
 	file := args[0]
-	c, err := client.NewCliClient(device, service)
+	c, err := client.NewCliClient(serviceAddr)
 	e.ErrChk(err)
 
 	restartingNow, err := c.LoadFirmware(file, chunkSize, time.Duration(timeoutSecs)*time.Second)
@@ -67,7 +67,7 @@ io4edge-cli load-raw-firmware <firmware-file>`,
 
 func loadRawFirmware(cmd *cobra.Command, args []string) {
 	file := args[0]
-	c, err := client.NewCliClient(device, service)
+	c, err := client.NewCliClient(serviceAddr)
 	e.ErrChk(err)
 
 	restartingNow, err := c.LoadFirmwareBinaryFromFile(file, chunkSize, time.Duration(timeoutSecs)*time.Second)
@@ -80,7 +80,7 @@ func readbackFirmwareID(c *core.Client, restartingNow bool) {
 	if restartingNow {
 		fmt.Println("Reconnect to restarted device")
 		var err error
-		c, err = client.NewCliClient(device, service)
+		c, err = client.NewCliClient(serviceAddr)
 		e.ErrChk(err)
 	}
 	fmt.Println("Reading back firmware id")

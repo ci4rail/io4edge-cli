@@ -23,8 +23,7 @@ import (
 )
 
 var (
-	device      = "InstanceName"
-	service     = "serviceName"
+	serviceAddr = "instanceName.serviceName.protocol"
 	timeoutSecs = 3
 )
 
@@ -45,7 +44,6 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&device, "device", "d", "", "Instance name of device")
-	rootCmd.PersistentFlags().StringVarP(&service, "service", "s", "", "Service name of the core function")
+	rootCmd.PersistentFlags().StringVarP(&serviceAddr, "service address", "s", "", "Distinct designation of the service (<Instance>.<Service>.<Protocol>)")
 	rootCmd.PersistentFlags().IntVarP(&timeoutSecs, "timeout", "t", 3, "Timeout in seconds to wait for device responses")
 }
