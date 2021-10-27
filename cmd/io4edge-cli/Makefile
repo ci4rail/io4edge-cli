@@ -10,7 +10,6 @@ build: build-io4edge-cli
 build-io4edge-cli:
 	go mod tidy
 	GOOS=linux go build $(GO_LDFLAGS) -o ${BIN_DIR}/${NAME} main.go
-	GOOS=linux GOARCH=arm go build $(GO_LDFLAGS) -o ${BIN_DIR}/${NAME}-arm main.go
 
 test:
 	go test ./...
