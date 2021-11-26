@@ -19,19 +19,14 @@ import (
 	api "github.com/ci4rail/io4edge-client-go/core/v1alpha1"
 )
 
-type serialNumber struct {
-	Hi uint64
-	Lo uint64
-}
-
 type hardwareID struct {
 	RootArticle  string
-	SerialNumber serialNumber
+	SerialNumber string
 	MajorVersion uint32
 }
 
 var (
-	hwID = hardwareID{"S101-CPU01UC", serialNumber{0x1234567887654321, 0x4567456745674567}, 1}
+	hwID = hardwareID{"S101-CPU01UC", "660e8400-e29b-11d4-a755-126655120346", 1}
 )
 
 // IdentifyHardware reports the current hardware inventory data
@@ -43,11 +38,8 @@ func IdentifyHardware() *api.CoreResponse {
 		RestartingNow: false,
 		Data: &api.CoreResponse_IdentifyHardware{
 			IdentifyHardware: &api.IdentifyHardwareResponse{
-				RootArticle: hwID.RootArticle,
-				SerialNumber: &api.SerialNumber{
-					Hi: hwID.SerialNumber.Hi,
-					Lo: hwID.SerialNumber.Lo,
-				},
+				RootArticle:  hwID.RootArticle,
+				SerialNumber: hwID.SerialNumber,
 				MajorVersion: hwID.MajorVersion,
 			},
 		},
@@ -60,8 +52,7 @@ func ProgramHardwareIdentification(c *api.ProgramHardwareIdentificationCommand) 
 	// TODO: Check signature
 	fmt.Printf("ProgramHardwareIdentification %s\n", c.RootArticle)
 	hwID.RootArticle = c.RootArticle
-	hwID.SerialNumber.Hi = c.SerialNumber.Hi
-	hwID.SerialNumber.Lo = c.SerialNumber.Lo
+	hwID.SerialNumber = c.SerialNumber
 	hwID.MajorVersion = c.MajorVersion
 
 	res := &api.CoreResponse{
