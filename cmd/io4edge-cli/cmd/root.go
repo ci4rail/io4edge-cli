@@ -24,6 +24,7 @@ import (
 
 var (
 	serviceAddr = "instanceName.serviceName.protocol"
+	ipAddrPort  = "localhost:9999"
 	timeoutSecs = 3
 )
 
@@ -45,5 +46,6 @@ func Execute() {
 
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&serviceAddr, "service address", "s", "", "Distinct designation of the service (<Instance>.<Service>.<Protocol>)")
+	rootCmd.PersistentFlags().StringVarP(&ipAddrPort, "ip address", "i", "", "IP address of io4edge devices with port e.g. 192.168.7.1:9999")
 	rootCmd.PersistentFlags().IntVarP(&timeoutSecs, "timeout", "t", 3, "Timeout in seconds to wait for device responses")
 }
