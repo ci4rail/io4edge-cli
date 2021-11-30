@@ -17,34 +17,36 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
 	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
-	api "github.com/ci4rail/io4edge-client-go/core/v1alpha2"
 	"github.com/spf13/cobra"
 )
 
-var identifyFirmwareCmd = &cobra.Command{
-	Use:     "identify-firmware",
-	Aliases: []string{"id-fw", "fw"},
-	Short:   "Get firmware infos from device",
-	Run:     identifyFirmware,
+var setPersistantParameterCmd = &cobra.Command{
+	Use:     "set-parameter NAME VALUE",
+	Aliases: []string{"set-para", "set-persist"},
+	Short:   "Set a persistent parameter.",
+	Long: `Program a parameter into the non volatile storage (nvs) of the device.
+While the name is the key to the value. It is only possible to set parameters for which the device already provides a place in the nvs.
+Example:
+io4edge-cli -s S101-IOU04-USB-EXT-1 set-parameter test-name test-value`,
+	Run:  setPersistantParameter,
+	Args: cobra.ExactArgs(2),
 }
 
-func identifyFirmware(cmd *cobra.Command, args []string) {
+func setPersistantParameter(cmd *cobra.Command, args []string) {
+	name := args[0]
+	value := args[1]
+
 	c, err := client.NewCliClient(serviceAddr)
 	e.ErrChk(err)
-	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
-	e.ErrChk(err)
-	printFirmwareID(fwID)
-}
 
-func printFirmwareID(fwID *api.IdentifyFirmwareResponse) {
-	fmt.Printf("Firmware name: %s, Version %s\n", fwID.Name, fwID.Version)
+	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)
+	e.ErrChk(err)
 }
 
 func init() {
-	rootCmd.AddCommand(identifyFirmwareCmd)
+	rootCmd.AddCommand(setPersistantParameterCmd)
 }

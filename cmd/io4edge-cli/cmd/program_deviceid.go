@@ -21,7 +21,6 @@ import (
 
 	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
 	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
-	api "github.com/ci4rail/io4edge-client-go/core/v1alpha1"
 	"github.com/spf13/cobra"
 )
 
@@ -32,22 +31,19 @@ var programDeviceIdentificationCmd = &cobra.Command{
 	Long: `Program default mdns instance name in the flash of the device.
 After a restart of the device, it will show up with this name in the mdns browser.
 Example:
-io4edge-cli program-devid S101-IOU04-USB-EXT-1`,
+io4edge-cli -i 192.168.200.1:9999 program-devid S101-IOU04-USB-EXT-1`,
 	Run:  programDeviceIdentification,
 	Args: cobra.ExactArgs(1),
 }
 
 func programDeviceIdentification(cmd *cobra.Command, args []string) {
-	instanceName := args[0]
-
-	id := &api.ProgramDeviceIdentificationCommand{
-		InstanceName: instanceName,
-	}
+	name := "device-id"
+	value := args[0]
 
 	c, err := client.NewCliClientFromIp(ipAddrPort)
 	e.ErrChk(err)
 
-	err = c.ProgramDeviceIdentification(id, time.Duration(timeoutSecs)*time.Second)
+	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 }
 
