@@ -21,8 +21,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	"github.com/ci4rail/io4edge-cli/internal/client"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
 	api "github.com/ci4rail/io4edge-client-go/core/v1alpha2"
 
 	"github.com/spf13/cobra"

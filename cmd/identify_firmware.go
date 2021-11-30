@@ -20,32 +20,31 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
-	"github.com/ci4rail/io4edge-client-go/core"
+	"github.com/ci4rail/io4edge-cli/internal/client"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
+	api "github.com/ci4rail/io4edge-client-go/core/v1alpha2"
 	"github.com/spf13/cobra"
 )
 
-var identifyHardwareCmd = &cobra.Command{
-	Use:     "identify-hardware",
-	Aliases: []string{"id-hw", "hw"},
-	Short:   "Get hardware infos from device",
-	Run:     identifyHardware,
+var identifyFirmwareCmd = &cobra.Command{
+	Use:     "identify-firmware",
+	Aliases: []string{"id-fw", "fw"},
+	Short:   "Get firmware infos from device",
+	Run:     identifyFirmware,
 }
 
-func identifyHardware(cmd *cobra.Command, args []string) {
+func identifyFirmware(cmd *cobra.Command, args []string) {
 	c, err := client.NewCliClient(serviceAddr)
 	e.ErrChk(err)
-	identifyHardwareFromClient(c)
+	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
+	e.ErrChk(err)
+	printFirmwareID(fwID)
 }
 
-func identifyHardwareFromClient(c *core.Client) {
-	hwID, err := c.IdentifyHardware(time.Duration(timeoutSecs) * time.Second)
-	e.ErrChk(err)
-
-	fmt.Printf("Hardware name: %s, rev: %d, serial: %s\n", hwID.RootArticle, hwID.MajorVersion, hwID.SerialNumber)
+func printFirmwareID(fwID *api.IdentifyFirmwareResponse) {
+	fmt.Printf("Firmware name: %s, Version %s\n", fwID.Name, fwID.Version)
 }
 
 func init() {
-	rootCmd.AddCommand(identifyHardwareCmd)
+	rootCmd.AddCommand(identifyFirmwareCmd)
 }

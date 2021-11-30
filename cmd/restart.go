@@ -17,34 +17,26 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
-	api "github.com/ci4rail/io4edge-client-go/core/v1alpha2"
+	"github.com/ci4rail/io4edge-cli/internal/client"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
 	"github.com/spf13/cobra"
 )
 
-var identifyFirmwareCmd = &cobra.Command{
-	Use:     "identify-firmware",
-	Aliases: []string{"id-fw", "fw"},
-	Short:   "Get firmware infos from device",
-	Run:     identifyFirmware,
+var restartCmd = &cobra.Command{
+	Use:   "restart",
+	Short: "Restart device",
+	Run:   restart,
 }
 
-func identifyFirmware(cmd *cobra.Command, args []string) {
+func restart(cmd *cobra.Command, args []string) {
 	c, err := client.NewCliClient(serviceAddr)
 	e.ErrChk(err)
-	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
+	_, err = c.Restart(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
-	printFirmwareID(fwID)
-}
-
-func printFirmwareID(fwID *api.IdentifyFirmwareResponse) {
-	fmt.Printf("Firmware name: %s, Version %s\n", fwID.Name, fwID.Version)
 }
 
 func init() {
-	rootCmd.AddCommand(identifyFirmwareCmd)
+	rootCmd.AddCommand(restartCmd)
 }

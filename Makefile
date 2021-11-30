@@ -1,20 +1,20 @@
-BIN_DIR ?= ./bin
+NAME = io4edge-cli
+BIN_DIR ?= bin
+VERSION ?= $(shell git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty)
+GO_LDFLAGS = -ldflags "-X github.com/ci4rail/io4edge-cli/pkg/version.Version=$(VERSION)"
 
-all: build
+all: test build-io4edge-cli
 
-build: io4edge-devsim io4edge-cli
+build: build-io4edge-cli
+
+build-io4edge-cli:
+	go mod tidy
+	GOOS=linux go build $(GO_LDFLAGS) -o ${BIN_DIR}/${NAME} main.go
 
 test:
 	go test ./...
 
 clean:
-	${MAKE} -C io4edge-devsim clean
+	rm -f ${BIN_DIR}/${NAME}
 
-io4edge-devsim:
-	${MAKE} -C cmd/io4edge-devsim build
-
-io4edge-cli:
-	${MAKE} -C cmd/io4edge-cli build
-
-
-.PHONY: all build clean test io4edge-devsim io4edge-cli
+.PHONY: all proto build build-io4edge-cli

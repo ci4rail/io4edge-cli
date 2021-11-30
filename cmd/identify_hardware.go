@@ -17,26 +17,35 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"time"
 
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	"github.com/ci4rail/io4edge-cli/internal/client"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
+	"github.com/ci4rail/io4edge-client-go/core"
 	"github.com/spf13/cobra"
 )
 
-var restartCmd = &cobra.Command{
-	Use:   "restart",
-	Short: "Restart device",
-	Run:   restart,
+var identifyHardwareCmd = &cobra.Command{
+	Use:     "identify-hardware",
+	Aliases: []string{"id-hw", "hw"},
+	Short:   "Get hardware infos from device",
+	Run:     identifyHardware,
 }
 
-func restart(cmd *cobra.Command, args []string) {
+func identifyHardware(cmd *cobra.Command, args []string) {
 	c, err := client.NewCliClient(serviceAddr)
 	e.ErrChk(err)
-	_, err = c.Restart(time.Duration(timeoutSecs) * time.Second)
+	identifyHardwareFromClient(c)
+}
+
+func identifyHardwareFromClient(c *core.Client) {
+	hwID, err := c.IdentifyHardware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
+
+	fmt.Printf("Hardware name: %s, rev: %d, serial: %s\n", hwID.RootArticle, hwID.MajorVersion, hwID.SerialNumber)
 }
 
 func init() {
-	rootCmd.AddCommand(restartCmd)
+	rootCmd.AddCommand(identifyHardwareCmd)
 }

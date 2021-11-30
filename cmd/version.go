@@ -19,7 +19,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/pkg/version"
+	"github.com/ci4rail/io4edge-cli/pkg/version"
 	"github.com/spf13/cobra"
 )
 

@@ -17,7 +17,7 @@ limitations under the License.
 package cmd
 
 import (
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
 
 	"github.com/spf13/cobra"
 )
