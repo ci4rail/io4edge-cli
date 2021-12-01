@@ -34,7 +34,7 @@ var identifyHardwareCmd = &cobra.Command{
 }
 
 func identifyHardware(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
+	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 	identifyHardwareFromClient(c)
 }

@@ -44,7 +44,7 @@ func programHardwareIdentification(cmd *cobra.Command, args []string) {
 	e.ErrChk(err)
 	serial := args[2]
 
-	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
+	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
 	err = c.ProgramHardwareIdentification(name, uint32(major), serial, time.Duration(timeoutSecs)*time.Second)

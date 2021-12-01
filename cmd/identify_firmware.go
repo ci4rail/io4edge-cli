@@ -33,7 +33,7 @@ var identifyFirmwareCmd = &cobra.Command{
 }
 
 func identifyFirmware(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
+	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 	fwName, fwVersion, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)

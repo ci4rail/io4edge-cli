@@ -31,7 +31,7 @@ var restartCmd = &cobra.Command{
 }
 
 func restart(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
+	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
 	_, err = c.Restart(time.Duration(timeoutSecs) * time.Second)

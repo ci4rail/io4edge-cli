@@ -8,7 +8,8 @@ import (
 )
 
 // newCliClientFromService creates the io4edge core client from the device address
-func newCliClientFromService(serviceAddr string) (*core.Client, error) {
+func newCliClientFromService(deviceID string) (*core.Client, error) {
+	serviceAddr := deviceID + "._io4edge-core._tcp"
 	c, err := core.NewClientFromService(serviceAddr, time.Duration(1)*time.Second)
 	return c, err
 }
@@ -21,12 +22,12 @@ func newCliClientFromIP(ipAddrPort string) (*core.Client, error) {
 
 // NewCliClient creates the io4edge core client from either the ip address and port or from the device address,
 // depending on which parameter is given.
-func NewCliClient(serviceAddr string, ipAddrPort string) (*core.Client, error) {
+func NewCliClient(deviceID string, ipAddrPort string) (*core.Client, error) {
 	var c *core.Client
 	var err error
 
-	if serviceAddr != "" {
-		c, err = newCliClientFromService(serviceAddr)
+	if deviceID != "" {
+		c, err = newCliClientFromService(deviceID)
 	} else if ipAddrPort != "" {
 		c, err = newCliClientFromIP(ipAddrPort)
 	} else {
