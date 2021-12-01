@@ -25,7 +25,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var setPersistantParameterCmd = &cobra.Command{
+var setPersistentParameterCmd = &cobra.Command{
 	Use:     "set-parameter NAME VALUE",
 	Aliases: []string{"set-para", "set-persist"},
 	Short:   "Set a persistent parameter.",
@@ -33,26 +33,26 @@ var setPersistantParameterCmd = &cobra.Command{
 While the name is the key to the value. It is only possible to set parameters for which the device already provides a place in the nvs.
 Example:
 io4edge-cli -s S101-IOU04-USB-EXT-1 set-parameter wifi-ssid Ci4Rail-Guest`,
-	Run:  setPersistantParameter,
+	Run:  setPersistentParameter,
 	Args: cobra.ExactArgs(2),
 }
 
-func setPersistantParameter(cmd *cobra.Command, args []string) {
+func setPersistentParameter(cmd *cobra.Command, args []string) {
 	name := args[0]
 	value := args[1]
 
 	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
-	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)
+	err = c.SetPersistentParameter(name, value, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
-	value, err = c.GetPersistantParameter(name, time.Duration(timeoutSecs)*time.Second)
+	value, err = c.GetPersistentParameter(name, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
 	fmt.Printf("Parameter %s was set to %s\n", name, value)
 }
 
 func init() {
-	rootCmd.AddCommand(setPersistantParameterCmd)
+	rootCmd.AddCommand(setPersistentParameterCmd)
 }

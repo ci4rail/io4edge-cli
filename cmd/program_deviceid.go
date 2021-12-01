@@ -44,10 +44,10 @@ func programDeviceIdentification(cmd *cobra.Command, args []string) {
 	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
-	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)
+	err = c.SetPersistentParameter(name, value, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
-	value, err = c.GetPersistantParameter(name, time.Duration(timeoutSecs)*time.Second)
+	value, err = c.GetPersistentParameter(name, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
 	fmt.Printf("Device id was set to %s\n", value)

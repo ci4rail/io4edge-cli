@@ -25,29 +25,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var getPersistantParameterCmd = &cobra.Command{
+var getPersistentParameterCmd = &cobra.Command{
 	Use:     "get-parameter NAME",
 	Aliases: []string{"get-para", "get-persist"},
 	Short:   "Get a persistent parameter.",
 	Long: `Read a parameter from the non volatile storage (nvs) of the device.
 Example:
 io4edge-cli -s S101-IOU04-USB-EXT-1 get-parameter wifi-ssid`,
-	Run:  getPersistantParameter,
+	Run:  getPersistentParameter,
 	Args: cobra.ExactArgs(1),
 }
 
-func getPersistantParameter(cmd *cobra.Command, args []string) {
+func getPersistentParameter(cmd *cobra.Command, args []string) {
 	name := args[0]
 
 	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
-	value, err := c.GetPersistantParameter(name, time.Duration(timeoutSecs)*time.Second)
+	value, err := c.GetPersistentParameter(name, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 
 	fmt.Printf("Read parameter name: %s, value: %s\n", name, value)
 }
 
 func init() {
-	rootCmd.AddCommand(getPersistantParameterCmd)
+	rootCmd.AddCommand(getPersistentParameterCmd)
 }
