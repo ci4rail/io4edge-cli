@@ -17,6 +17,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ci4rail/io4edge-cli/internal/client"
@@ -24,29 +25,29 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var setPersistantParameterCmd = &cobra.Command{
-	Use:     "set-parameter NAME VALUE",
-	Aliases: []string{"set-para", "set-persist"},
-	Short:   "Set a persistent parameter.",
-	Long: `Program a parameter into the non volatile storage (nvs) of the device.
-While the name is the key to the value. It is only possible to set parameters for which the device already provides a place in the nvs.
+var getPersistantParameterCmd = &cobra.Command{
+	Use:     "get-parameter NAME",
+	Aliases: []string{"get-para", "get-persist"},
+	Short:   "Get a persistent parameter.",
+	Long: `Read a parameter from the non volatile storage (nvs) of the device.
 Example:
-io4edge-cli -s S101-IOU04-USB-EXT-1 set-parameter wifi-ssid Ci4Rail-Guest`,
-	Run:  setPersistantParameter,
-	Args: cobra.ExactArgs(2),
+io4edge-cli -s S101-IOU04-USB-EXT-1 get-parameter wifi-ssid`,
+	Run:  getPersistantParameter,
+	Args: cobra.ExactArgs(1),
 }
 
-func setPersistantParameter(cmd *cobra.Command, args []string) {
+func getPersistantParameter(cmd *cobra.Command, args []string) {
 	name := args[0]
-	value := args[1]
 
 	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
-	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)
+	value, err := c.GetPersistantParameter(name, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
+
+	fmt.Printf("Read parameter name: %s, value: %s\n", name, value)
 }
 
 func init() {
-	rootCmd.AddCommand(setPersistantParameterCmd)
+	rootCmd.AddCommand(getPersistantParameterCmd)
 }
