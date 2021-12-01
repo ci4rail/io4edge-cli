@@ -17,6 +17,7 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ci4rail/io4edge-cli/internal/client"
@@ -45,6 +46,11 @@ func setPersistantParameter(cmd *cobra.Command, args []string) {
 
 	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
+
+	value, err = c.GetPersistantParameter(name, time.Duration(timeoutSecs)*time.Second)
+	e.ErrChk(err)
+
+	fmt.Printf("Parameter %s was set to %s\n", name, value)
 }
 
 func init() {
