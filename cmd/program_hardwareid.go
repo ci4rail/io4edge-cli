@@ -23,7 +23,6 @@ import (
 
 	"github.com/ci4rail/io4edge-cli/internal/client"
 	e "github.com/ci4rail/io4edge-cli/internal/errors"
-	api "github.com/ci4rail/io4edge-client-go/core/v1alpha2"
 
 	"github.com/spf13/cobra"
 )
@@ -45,16 +44,10 @@ func programHardwareIdentification(cmd *cobra.Command, args []string) {
 	e.ErrChk(err)
 	serial := args[2]
 
-	id := &api.ProgramHardwareIdentificationCommand{
-		RootArticle:  name,
-		MajorVersion: uint32(major),
-		SerialNumber: serial,
-	}
-
-	c, err := client.NewCliClient(serviceAddr)
+	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
 	e.ErrChk(err)
 
-	err = c.ProgramHardwareIdentification(id, time.Duration(timeoutSecs)*time.Second)
+	err = c.ProgramHardwareIdentification(name, uint32(major), serial, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 	fmt.Println("Success. Read back programmed ID")
 	identifyHardwareFromClient(c)

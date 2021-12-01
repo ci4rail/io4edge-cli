@@ -23,9 +23,9 @@ import (
 )
 
 var (
-	serviceAddr = "instanceName.serviceName.protocol"
-	ipAddrPort  = "localhost:9999"
-	timeoutSecs = 3
+	serviceAddr string
+	ipAddrPort  string
+	timeoutSecs int
 )
 
 // rootCmd represents the base command when called without any subcommands

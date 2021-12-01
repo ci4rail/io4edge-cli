@@ -40,7 +40,7 @@ func setPersistantParameter(cmd *cobra.Command, args []string) {
 	name := args[0]
 	value := args[1]
 
-	c, err := client.NewCliClient(serviceAddr)
+	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
 	e.ErrChk(err)
 
 	err = c.SetPersistantParameter(name, value, time.Duration(timeoutSecs)*time.Second)

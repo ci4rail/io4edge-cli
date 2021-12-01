@@ -22,7 +22,6 @@ import (
 
 	"github.com/ci4rail/io4edge-cli/internal/client"
 	e "github.com/ci4rail/io4edge-cli/internal/errors"
-	api "github.com/ci4rail/io4edge-client-go/core/v1alpha2"
 	"github.com/spf13/cobra"
 )
 
@@ -34,15 +33,11 @@ var identifyFirmwareCmd = &cobra.Command{
 }
 
 func identifyFirmware(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr)
+	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
 	e.ErrChk(err)
-	fwID, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
+	fwName, fwVersion, err := c.IdentifyFirmware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
-	printFirmwareID(fwID)
-}
-
-func printFirmwareID(fwID *api.IdentifyFirmwareResponse) {
-	fmt.Printf("Firmware name: %s, Version %s\n", fwID.Name, fwID.Version)
+	fmt.Printf("Firmware name: %s, Version %s\n", fwName, fwVersion)
 }
 
 func init() {

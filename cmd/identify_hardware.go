@@ -34,16 +34,16 @@ var identifyHardwareCmd = &cobra.Command{
 }
 
 func identifyHardware(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr)
+	c, err := client.NewCliClient(serviceAddr, ipAddrPort)
 	e.ErrChk(err)
 	identifyHardwareFromClient(c)
 }
 
 func identifyHardwareFromClient(c *core.Client) {
-	hwID, err := c.IdentifyHardware(time.Duration(timeoutSecs) * time.Second)
+	rootArticle, majorVersion, serialNumber, err := c.IdentifyHardware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
 
-	fmt.Printf("Hardware name: %s, rev: %d, serial: %s\n", hwID.RootArticle, hwID.MajorVersion, hwID.SerialNumber)
+	fmt.Printf("Hardware name: %s, rev: %d, serial: %s\n", rootArticle, majorVersion, serialNumber)
 }
 
 func init() {

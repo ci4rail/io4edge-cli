@@ -1,19 +1,37 @@
 package client
 
 import (
+	"errors"
 	"time"
 
 	"github.com/ci4rail/io4edge-client-go/core"
 )
 
-// NewCliClient creates the io4edge core client from the device address
-func NewCliClient(serviceAddr string) (*core.Client, error) {
+// newCliClientFromService creates the io4edge core client from the device address
+func newCliClientFromService(serviceAddr string) (*core.Client, error) {
 	c, err := core.NewClientFromService(serviceAddr, time.Duration(1)*time.Second)
 	return c, err
 }
 
-// NewCliClient creates the io4edge core client from the ip address and the port
-func NewCliClientFromIp(ipAddrPort string) (*core.Client, error) {
+// newCliClientFromIP creates the io4edge core client from the ip address and the port
+func newCliClientFromIP(ipAddrPort string) (*core.Client, error) {
 	c, err := core.NewClientFromSocketAddress(ipAddrPort)
+	return c, err
+}
+
+// NewCliClient creates the io4edge core client from either the ip address and port or from the device address,
+// depending on which parameter is given.
+func NewCliClient(serviceAddr string, ipAddrPort string) (*core.Client, error) {
+	var c *core.Client
+	var err error
+
+	if serviceAddr != "" {
+		c, err = newCliClientFromService(serviceAddr)
+	} else if ipAddrPort != "" {
+		c, err = newCliClientFromIP(ipAddrPort)
+	} else {
+		err = errors.New("no device specified (either device id or ip address required)")
+	}
+
 	return c, err
 }
