@@ -68,7 +68,7 @@ Hardware name: S101-IOU04, rev: 2, serial: 70a3b920-7eb7-434e-b20d-6d0a12618ffe
 
 ### Set device id:
 ```bash
-$ ./io4edge-cli -i 192.168.201.1 program-devid S101-IOU04-USB-EXT-1
+$ ./io4edge-cli -i 192.168.201.1:9999 program-devid S101-IOU04-USB-EXT-1
 Device id was set to S101-IOU04-USB-EXT-1
 Restart of the device required to apply the new device id.
 ```
