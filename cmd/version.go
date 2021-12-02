@@ -17,26 +17,22 @@ limitations under the License.
 package cmd
 
 import (
-	"time"
+	"fmt"
 
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	"github.com/ci4rail/io4edge-cli/pkg/version"
 	"github.com/spf13/cobra"
 )
 
-var restartCmd = &cobra.Command{
-	Use:   "restart",
-	Short: "Restart device",
-	Run:   restart,
-}
-
-func restart(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr)
-	e.ErrChk(err)
-	_, err = c.Restart(time.Duration(timeoutSecs) * time.Second)
-	e.ErrChk(err)
+var versionCmd = &cobra.Command{
+	Use:   "version",
+	Short: "Print version information and quit",
+	Long: `Print version information and quit
+This command displays version information for the io4edge-cli.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Printf("io4edge-cli %s\n", version.Version)
+	},
 }
 
 func init() {
-	rootCmd.AddCommand(restartCmd)
+	rootCmd.AddCommand(versionCmd)
 }

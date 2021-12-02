@@ -17,14 +17,15 @@ limitations under the License.
 package cmd
 
 import (
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
 
 	"github.com/spf13/cobra"
 )
 
 var (
-	serviceAddr = "instanceName.serviceName.protocol"
-	timeoutSecs = 3
+	deviceID    string
+	ipAddrPort  string
+	timeoutSecs int
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -44,6 +45,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&serviceAddr, "service address", "s", "", "Distinct designation of the service (<Instance>.<Service>.<Protocol>)")
+	rootCmd.PersistentFlags().StringVarP(&deviceID, "device id", "d", "", "Distinct designation of the device (mdns instance name of the the device)")
+	rootCmd.PersistentFlags().StringVarP(&ipAddrPort, "ip address", "i", "", "IP address of io4edge devices with port e.g. 192.168.200.1:9999")
 	rootCmd.PersistentFlags().IntVarP(&timeoutSecs, "timeout", "t", 3, "Timeout in seconds to wait for device responses")
 }

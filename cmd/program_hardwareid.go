@@ -21,12 +21,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ci4rail/hw-inventory-go/serno"
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
-	api "github.com/ci4rail/io4edge-client-go/core/v1alpha1"
+	"github.com/ci4rail/io4edge-cli/internal/client"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
 
-	uuidv4 "github.com/gofrs/uuid"
 	"github.com/spf13/cobra"
 )
 
@@ -47,26 +44,10 @@ func programHardwareIdentification(cmd *cobra.Command, args []string) {
 	e.ErrChk(err)
 	serial := args[2]
 
-	u, err := uuidv4.NewV4()
-	e.ErrChk(err)
-	err = u.UnmarshalText([]byte(serial))
+	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 
-	serHi, serLo := serno.UUIDToInt(u)
-
-	id := &api.ProgramHardwareIdentificationCommand{
-		RootArticle:  name,
-		MajorVersion: uint32(major),
-		SerialNumber: &api.SerialNumber{
-			Hi: serHi,
-			Lo: serLo,
-		},
-	}
-
-	c, err := client.NewCliClient(serviceAddr)
-	e.ErrChk(err)
-
-	err = c.ProgramHardwareIdentification(id, time.Duration(timeoutSecs)*time.Second)
+	err = c.ProgramHardwareIdentification(name, uint32(major), serial, time.Duration(timeoutSecs)*time.Second)
 	e.ErrChk(err)
 	fmt.Println("Success. Read back programmed ID")
 	identifyHardwareFromClient(c)

@@ -20,9 +20,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ci4rail/hw-inventory-go/serno"
-	"github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/client"
-	e "github.com/ci4rail/io4edge-cli/cmd/io4edge-cli/internal/errors"
+	"github.com/ci4rail/io4edge-cli/internal/client"
+	e "github.com/ci4rail/io4edge-cli/internal/errors"
 	"github.com/ci4rail/io4edge-client-go/core"
 	"github.com/spf13/cobra"
 )
@@ -35,19 +34,16 @@ var identifyHardwareCmd = &cobra.Command{
 }
 
 func identifyHardware(cmd *cobra.Command, args []string) {
-	c, err := client.NewCliClient(serviceAddr)
+	c, err := client.NewCliClient(deviceID, ipAddrPort)
 	e.ErrChk(err)
 	identifyHardwareFromClient(c)
 }
 
 func identifyHardwareFromClient(c *core.Client) {
-	hwID, err := c.IdentifyHardware(time.Duration(timeoutSecs) * time.Second)
+	rootArticle, majorVersion, serialNumber, err := c.IdentifyHardware(time.Duration(timeoutSecs) * time.Second)
 	e.ErrChk(err)
 
-	u, err := serno.UUIDFromInt(hwID.SerialNumber.Hi, hwID.SerialNumber.Lo)
-	e.ErrChk(err)
-
-	fmt.Printf("Hardware name: %s, rev: %d, serial: %s\n", hwID.RootArticle, hwID.MajorVersion, u)
+	fmt.Printf("Hardware name: %s, rev: %d, serial: %s\n", rootArticle, majorVersion, serialNumber)
 }
 
 func init() {
