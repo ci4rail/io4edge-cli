@@ -50,7 +50,7 @@ Reconnect to restarted device
 ```
 
 ### Load raw firmware:
-"Raw Firmware" means: Load a firmware binary that is not embedded in a firmware package file. In this case, the
+"Raw Firmware" means: Load a firmware binary that is not embedded in a firmware package file. In this case, the HW/SW compatibility check is NOT performed!
 
 ```bash
 $ io4edge-cli -d S101-IOU04-USB-EXT-1 load-raw-firmware build/fw_esp_io4edge_default.bin
