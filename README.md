@@ -1,3 +1,5 @@
+THIS REPO IS DEPRECATED. CONTENT HAS BEEN INTEGRATED INTO https://github.com/ci4rail/io4edge-client-go.
+
 # io4edge-cli
 Command line tool to manage io4edge devices.
 
